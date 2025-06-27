@@ -1,4 +1,5 @@
 const { chromium } = require('playwright');
+const moment = require('moment');
 
 class OcineScraper {
   constructor() {
@@ -39,7 +40,8 @@ class OcineScraper {
 
   async getMoviesFromCartelera() {
     console.log('🎬 Extrayendo películas de la cartelera...');
-    
+     const today = moment().format('YYYY-MM-DD');
+
     try {
       // Obtener todas las películas de la cartelera
       const movies = await this.page.evaluate(() => {
@@ -63,7 +65,8 @@ class OcineScraper {
             const scheduleTable = element.querySelector('table');
             console.log('scheduleTable', scheduleTable);
             let todaySchedule = [];
-            scheduleTable.querySelectorAll('tr.plans .horasessio button')
+            
+            scheduleTable.querySelectorAll('tr[class="'+today+' plans"] .horasessio button')
             .forEach((button) => {
               const time = button.textContent.trim();
               if (time) {
